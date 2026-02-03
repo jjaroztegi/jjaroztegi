@@ -43,87 +43,87 @@ const sequence = [
   {
     type: 'prompt',
     delay: 1.2,
-    command: 'whoami',
-    commandDelay: 1.4,
-    charSpeed: 0.10
-  },
-  {
-    type: 'output',
-    delay: 2.2,
-    text: 'Juanjo Aroztegi'
-  },
-  {
-    type: 'output',
-    delay: 2.3,
-    text: 'Telecommunications Engineer | Spain'
-  },
-  {
-    type: 'blank',
-    delay: 2.5
-  },
-  {
-    type: 'prompt',
-    delay: 2.6,
-    command: 'cat stack.yaml',
-    commandDelay: 2.8,
-    charSpeed: 0.10
-  },
-  {
-    type: 'output',
-    delay: 4.4,
-    text: 'languages:   [ C, C++, Python, Java, Assembly, VHDL ]'
-  },
-  {
-    type: 'output',
-    delay: 4.4,
-    text: 'engineering: [ MATLAB, Cadence, Keysight ADS, CST ]'
-  },
-  {
-    type: 'output',
-    delay: 4.4,
-    text: 'tools:       [ Linux, Git, Docker, SQL, ML_Inference ]'
-  },
-  {
-    type: 'blank',
-    delay: 4.6
-  },
-  {
-    type: 'prompt',
-    delay: 4.8,
-    command: 'uptime',
-    commandDelay: 5.0,
-    charSpeed: 0.10
-  },
-  {
-    type: 'output',
-    delay: 5.8,
-    text: `Uptime: ${uptime}`
-  },
-  {
-    type: 'blank',
-    delay: 6.0
-  },
-  {
-    type: 'prompt',
-    delay: 6.2,
     command: 'cc -o main main.c && ./main',
-    commandDelay: 6.4,
+    commandDelay: 1.4,
     charSpeed: 0.08
   },
   {
     type: 'output',
-    delay: 8.8,
+    delay: 3.8,
     text: 'Hello World!'
   },
   {
     type: 'blank',
-    delay: 9.0
+    delay: 4.0
   },
   {
     type: 'prompt',
-    delay: 9.2,
+    delay: 4.2,
+    command: 'whoami',
+    commandDelay: 4.4,
+    charSpeed: 0.10
+  },
+  {
+    type: 'output',
+    delay: 5.2,
+    text: 'Juanjo Aroztegi'
+  },
+  {
+    type: 'output',
+    delay: 5.3,
+    text: 'Telecommunications Engineer | Spain'
+  },
+  {
+    type: 'blank',
+    delay: 5.5
+  },
+  {
+    type: 'prompt',
+    delay: 5.6,
+    command: 'cat skills.txt',
+    commandDelay: 5.8,
+    charSpeed: 0.10
+  },
+  {
+    type: 'output',
+    delay: 7.4,
+    text: 'languages:   [ C, C++, Python, Java, Assembly, VHDL ]'
+  },
+  {
+    type: 'output',
+    delay: 7.4,
+    text: 'engineering: [ MATLAB, Cadence, Keysight ADS, CST ]'
+  },
+  {
+    type: 'output',
+    delay: 7.4,
+    text: 'tools:       [ Linux, Git, Docker, SQL, ML_Inference ]'
+  },
+  {
+    type: 'blank',
+    delay: 7.6
+  },
+  {
+    type: 'prompt',
+    delay: 7.8,
+    command: 'echo $STATUS',
+    commandDelay: 8.0,
+    charSpeed: 0.10
+  },
+  {
+    type: 'output',
+    delay: 9.6,
+    text: 'Cloud ML training and data analysis'
+  },
+  {
+    type: 'blank',
+    delay: 9.8
+  },
+  {
+    type: 'prompt',
+    delay: 10.0,
     command: '',
-    commandDelay: 9.4,
+    commandDelay: 10.2,
     charSpeed: 0.06
   }
 ];

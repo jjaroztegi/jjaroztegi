@@ -22,9 +22,7 @@ const theme = {
 };
 
 // --- FONT CONFIGURATION ---
-const CHAR_WIDTH = 6.7;
 const PROMPT_PREFIX = 'juanjo@aroztegi:~$ ';
-const PROMPT_PREFIX_WIDTH = PROMPT_PREFIX.length * CHAR_WIDTH;
 
 // --- ANIMATION SEQUENCE ---
 const sequence = [
@@ -138,20 +136,61 @@ function escapeHTML(text) {
     .replace(/"/g, '&quot;');
 }
 
-function createTypewriterSpans(text, startTime, charDelay) {
-  return text.split('').map((char, i) => {
+function createPromptFrames(command, startTime, charDelay, endTime, isFinalPrompt) {
+  const frames = [];
+  const totalChars = command.length;
+
+  for (let i = 0; i <= totalChars; i += 1) {
     const time = startTime + (i * charDelay);
-    const escapedChar = escapeHTML(char);
-    return `<tspan opacity="0">${escapedChar}<animate attributeName="opacity" from="0" to="1" begin="${time.toFixed(2)}s" dur="0.01s" fill="freeze" /></tspan>`;
-  }).join('');
+    const isLast = i === totalChars;
+    const typed = escapeHTML(command.slice(0, i));
+    const begin = time.toFixed(2);
+    const dur = charDelay.toFixed(2);
+    const finalFrameDur = endTime && endTime > time ? (endTime - time).toFixed(2) : dur;
+    let visibility = '';
+    let cursor = '';
+
+    if (isLast && isFinalPrompt) {
+      visibility = `<animate attributeName="opacity" from="0" to="1" begin="${begin}s" dur="0.01s" fill="freeze" />`;
+      cursor = `<tspan class="cursor" opacity="0">█<animate attributeName="opacity" values="0;0;1;1;0;0" dur="1s" begin="${begin}s" repeatCount="indefinite" /></tspan>`;
+    } else if (isLast) {
+      visibility = `<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.01;0.99;1" dur="${finalFrameDur}s" begin="${begin}s" fill="remove" />`;
+      cursor = `<tspan class="cursor">█</tspan>`;
+    } else {
+      visibility = `<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.01;0.99;1" dur="${dur}s" begin="${begin}s" fill="remove" />`;
+      cursor = `<tspan class="cursor">█</tspan>`;
+    }
+
+    frames.push(
+      `<text class="mono" opacity="0">${visibility}<tspan class="keyword">${escapeHTML(PROMPT_PREFIX)}</tspan><tspan class="command">${typed}</tspan>${cursor}</text>`
+    );
+  }
+
+  let staticLine = '';
+  if (!isFinalPrompt && endTime) {
+    const begin = endTime.toFixed(2);
+    staticLine = `<text class="mono" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="${begin}s" dur="0.01s" fill="freeze" /><tspan class="keyword">${escapeHTML(PROMPT_PREFIX)}</tspan><tspan class="command">${escapeHTML(command)}</tspan></text>`;
+  }
+
+  return frames.join('') + staticLine;
 }
 
 // Generate SVG Lines
 let yOffset = 35;
 const lineHeight = 22;
 
-const lines = sequence.map((item) => {
+const lastIndex = sequence.length - 1;
+const nextVisibleDelay = (idx) => {
+  for (let i = idx + 1; i < sequence.length; i += 1) {
+    if (sequence[i].type !== 'blank') {
+      return sequence[i].delay;
+    }
+  }
+  return null;
+};
+const lines = sequence.map((item, index) => {
   let content = '';
+  const isLast = index === lastIndex;
 
   switch (item.type) {
     case 'boot':
@@ -179,11 +218,12 @@ const lines = sequence.map((item) => {
       break;
 
     case 'prompt':
-      const typed = createTypewriterSpans(item.command, item.commandDelay, item.charSpeed);
+      const endTime = isLast ? null : nextVisibleDelay(index);
+      const frames = createPromptFrames(item.command, item.commandDelay, item.charSpeed, endTime, isLast);
       content = `
     <g opacity="0" transform="translate(0, ${yOffset})">
       <animate attributeName="opacity" from="0" to="1" begin="${item.delay}s" dur="0.1s" fill="freeze" />
-      <text class="mono"><tspan class="keyword">${escapeHTML(PROMPT_PREFIX)}</tspan><tspan class="command">${typed}</tspan></text>
+      ${frames}
     </g>`;
       yOffset += lineHeight;
       break;
@@ -202,19 +242,6 @@ const lines = sequence.map((item) => {
 
 // Calculate total height dynamically + padding
 const totalHeight = yOffset + 20;
-
-// Calculate cursor position and timing
-const lastItem = sequence[sequence.length - 1];
-let cursorX = 0;
-let cursorY = yOffset - lineHeight;
-let cursorTime = lastItem.delay + 0.5;
-
-if (lastItem.type === 'prompt') {
-  cursorX = PROMPT_PREFIX_WIDTH + (lastItem.command.length * CHAR_WIDTH) + CHAR_WIDTH;
-  cursorTime = Math.max(lastItem.delay, lastItem.commandDelay + (lastItem.command.length * lastItem.charSpeed));
-} else if (lastItem.type === 'output') {
-  cursorX = 0;
-}
 
 // SVG Template - Responsive with preserveAspectRatio
 const svg = `<svg width="100%" height="auto" viewBox="0 0 800 ${totalHeight}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
@@ -241,11 +268,6 @@ const svg = `<svg width="100%" height="auto" viewBox="0 0 800 ${totalHeight}" xm
 
   <g transform="translate(20, 0)">
     ${lines}
-
-    <!-- Blinking Cursor -->
-    <rect x="${cursorX}" y="${cursorY - 12}" width="9" height="17" class="cursor" opacity="0">
-      <animate attributeName="opacity" values="0;0;1;1;0;0" dur="1s" begin="${cursorTime.toFixed(2)}s" repeatCount="indefinite" />
-    </rect>
   </g>
 </svg>`;
 

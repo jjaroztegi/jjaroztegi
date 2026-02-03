@@ -176,8 +176,11 @@ function createPromptFrames(command, startTime, charDelay, endTime, isFinalPromp
 }
 
 // Generate SVG Lines
-let yOffset = 35;
-const lineHeight = 22;
+const textScale = 1.3;
+const baseFontSize = 14;
+const fontSize = baseFontSize * textScale;
+let yOffset = 35 * textScale;
+const lineHeight = 22 * textScale;
 
 const lastIndex = sequence.length - 1;
 const nextVisibleDelay = (idx) => {
@@ -241,7 +244,7 @@ const lines = sequence.map((item, index) => {
 }).join('');
 
 // Calculate total height dynamically + padding
-const totalHeight = yOffset + 20;
+const totalHeight = Math.ceil(yOffset + (20 * textScale));
 
 // SVG Template - Responsive with preserveAspectRatio
 const svg = `<svg width="100%" height="auto" viewBox="0 0 800 ${totalHeight}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
@@ -250,7 +253,7 @@ const svg = `<svg width="100%" height="auto" viewBox="0 0 800 ${totalHeight}" xm
 
     /* Global Settings */
     .base { fill: ${theme.bg}; }
-    .mono { font-family: 'Iosevka', 'Courier New', monospace; font-size: 14px; }
+    .mono { font-family: 'Iosevka', 'Courier New', monospace; font-size: ${fontSize}px; }
 
     /* Theme Colors */
     .fg { fill: ${theme.fg}; }

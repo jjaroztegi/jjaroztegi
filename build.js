@@ -29,12 +29,12 @@ const sequence = [
   {
     type: 'boot',
     delay: 0.3,
-    text: 'Loading juanjo.service... OK'
+    text: 'Registered sip:juanjo@aroztegi.com'
   },
   {
     type: 'comment',
     delay: 0.8,
-    text: '# Initializing Environment'
+    text: '# Voice AI · Telephony · Evaluation'
   },
   {
     type: 'blank',
@@ -43,87 +43,92 @@ const sequence = [
   {
     type: 'prompt',
     delay: 1.2,
-    command: 'cc -o main main.c && ./main',
-    commandDelay: 1.4,
-    charSpeed: 0.08
-  },
-  {
-    type: 'output',
-    delay: 3.8,
-    text: 'Hello World!'
-  },
-  {
-    type: 'blank',
-    delay: 4.0
-  },
-  {
-    type: 'prompt',
-    delay: 4.2,
     command: 'whoami',
-    commandDelay: 4.4,
+    commandDelay: 1.4,
     charSpeed: 0.10
   },
   {
     type: 'output',
-    delay: 5.2,
+    delay: 2.6,
     text: 'Juanjo Aroztegi'
   },
   {
     type: 'output',
-    delay: 5.3,
-    text: 'Telecommunications Engineer | Spain'
+    delay: 2.7,
+    text: 'AI/R&D Engineer | Telecom Engineer | Basque Country'
   },
   {
     type: 'blank',
-    delay: 5.5
+    delay: 2.9
   },
   {
     type: 'prompt',
-    delay: 5.6,
-    command: 'cat skills.txt',
-    commandDelay: 5.8,
-    charSpeed: 0.10
+    delay: 3.0,
+    command: 'cat stack.txt',
+    commandDelay: 3.2,
+    charSpeed: 0.08
   },
   {
     type: 'output',
-    delay: 7.4,
-    text: 'languages:   [ C, C++, Python, Java, Assembly, VHDL ]'
+    delay: 4.8,
+    text: 'ai:        [ LLM agents, MCP, realtime voice, evals ]'
   },
   {
     type: 'output',
-    delay: 7.4,
-    text: 'engineering: [ MATLAB, Cadence, Keysight ADS, CST ]'
+    delay: 4.8,
+    text: 'telephony: [ SIP, RTP, SIPREC, SBC, G.711 ]'
   },
   {
     type: 'output',
-    delay: 7.4,
-    text: 'tools:       [ Linux, Git, Docker, SQL, ML_Inference ]'
+    delay: 4.8,
+    text: 'code:      [ Python, TypeScript, C#, SQL ]'
+  },
+  {
+    type: 'output',
+    delay: 4.8,
+    text: 'infra:     [ Linux, Docker, Azure, Git ]'
   },
   {
     type: 'blank',
-    delay: 7.6
+    delay: 5.0
   },
   {
     type: 'prompt',
-    delay: 7.8,
+    delay: 5.1,
+    command: 'sip-trace --last',
+    commandDelay: 5.3,
+    charSpeed: 0.07
+  },
+  {
+    type: 'output',
+    delay: 7.0,
+    text: 'INVITE -> 200 OK -> ACK -> RTP -> REFER -> agent'
+  },
+  {
+    type: 'blank',
+    delay: 7.2
+  },
+  {
+    type: 'prompt',
+    delay: 7.3,
     command: 'echo $STATUS',
-    commandDelay: 8.0,
-    charSpeed: 0.10
+    commandDelay: 7.5,
+    charSpeed: 0.08
   },
   {
     type: 'output',
-    delay: 9.6,
-    text: 'Cloud ML training and data analysis'
+    delay: 9.0,
+    text: 'Building AI systems for contact centers'
   },
   {
     type: 'blank',
-    delay: 9.8
+    delay: 9.2
   },
   {
     type: 'prompt',
-    delay: 10.0,
+    delay: 9.4,
     command: '',
-    commandDelay: 10.2,
+    commandDelay: 9.6,
     charSpeed: 0.06
   }
 ];
@@ -200,9 +205,7 @@ const lines = sequence.map((item, index) => {
       content = `
     <g opacity="0" transform="translate(0, ${yOffset})">
       <animate attributeName="opacity" from="0" to="1" begin="${item.delay}s" dur="0.1s" fill="freeze" />
-      <text class="mono">
-        <tspan class="operator">[</tspan><tspan class="success"> OK </tspan><tspan class="operator">]</tspan> <tspan class="constant">${escapeHTML(item.text)}</tspan>
-      </text>
+      <text class="mono"><tspan class="operator">[</tspan><tspan class="success"> OK </tspan><tspan class="operator">]</tspan> <tspan class="constant">${escapeHTML(item.text)}</tspan></text>
     </g>`;
       yOffset += lineHeight;
       break;
@@ -247,15 +250,10 @@ const lines = sequence.map((item, index) => {
 const totalHeight = Math.ceil(yOffset + (20 * textScale));
 
 // SVG Template - Responsive with preserveAspectRatio
-const svg = `<svg width="100%" height="auto" viewBox="0 0 800 ${totalHeight}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
+const svg = `<svg width="100%" viewBox="0 0 800 ${totalHeight}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Iosevka:wght@400;700&amp;display=swap');
-
-    /* Global Settings */
     .base { fill: ${theme.bg}; }
-    .mono { font-family: 'Iosevka', 'Courier New', monospace; font-size: ${fontSize}px; }
-
-    /* Theme Colors */
+    .mono { font-family: 'Iosevka', 'Courier New', monospace; font-size: ${fontSize}px; white-space: pre; }
     .fg { fill: ${theme.fg}; }
     .keyword { fill: ${theme.keyword}; font-weight: bold; }
     .string { fill: ${theme.string}; }
